@@ -43,7 +43,7 @@ let g:CommandTMaxHeight=20
 map <Leader><Leader> :ZoomWin<CR>
 
 " CTags
-map <Leader>rt :!ctags --extra=+f -R *<CR><CR>
+map <Leader>crt :!ctags --extra=+f -R *<CR><CR>
 map <C-\> :tnext<CR>
 
 " Remember last location in file
@@ -141,6 +141,10 @@ runtime! macros/matchit.vim
 
 " Show (partial) command in the status line
 set showcmd
+
+" Settings for VimClojure
+let g:clj_hightlight_builtins=1 " Highlight Clojure's builtins
+let vimclojure#ParenRainbow=1       " Rainbow parentheses'!
 
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))

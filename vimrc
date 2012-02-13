@@ -151,3 +151,7 @@ let vimclojure#ParenRainbow=1       " Rainbow parentheses'!
 if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
+
+nmap <CR> :nohlsearch<CR>/<BS>
+
+au! BufWritePost .vimrc source %

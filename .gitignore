@@ -3,6 +3,8 @@ tmp
 nerdtree_plugin
 
 after
+backup
+/bundle/textobj
 doc
 plugin
 ruby

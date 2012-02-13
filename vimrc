@@ -152,6 +152,6 @@ if filereadable(expand("~/.vimrc.local"))
   source ~/.vimrc.local
 endif
 
-nmap <CR> :nohlsearch<CR>/<BS>
+nmap <Enter> :nohlsearch<Enter>/<BS>
 
 au! BufWritePost .vimrc source %

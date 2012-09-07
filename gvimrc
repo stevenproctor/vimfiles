@@ -81,3 +81,5 @@ endfunction
 if filereadable(expand("~/.gvimrc.local"))
   source ~/.gvimrc.local
 endif
+
+set guifont=Inconsolata:h21

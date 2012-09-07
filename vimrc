@@ -154,4 +154,6 @@ endif
 
 nmap <Enter> :nohlsearch<Enter>/<BS>
 
+set guifont=Inconsolata
+
 au! BufWritePost .vimrc source %

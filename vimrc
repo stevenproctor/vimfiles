@@ -3,9 +3,14 @@ call pathogen#helptags()
 
 set nocompatible
 
+set title
 set number
 set ruler
+set scrolloff=3
 syntax on
+
+nnoremap <C-e> 3<C-e>
+nnoremap <C-y> 3<C-y>
 
 " Set encoding
 set encoding=utf-8
@@ -124,7 +129,9 @@ set modeline
 set modelines=10
 
 " Default color scheme
-color solarized
+let g:solarized_termtrans = 1
+let g:solarized_termcolors=256
+colorscheme solarized
 set background=dark
 
 " Directories for swp files

@@ -1,3 +1,6 @@
+let mapleader = ","
+let maplocalleader = ","
+
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
@@ -153,6 +156,7 @@ set showcmd
 " Settings for VimClojure
 let g:clj_hightlight_builtins=1 " Highlight Clojure's builtins
 let vimclojure#ParenRainbow=1       " Rainbow parentheses'!
+let vimclojure#WantNailgun = 1
 
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))

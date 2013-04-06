@@ -10,8 +10,8 @@
 [submodule "bundle/rubyblock"]
 	path = bundle/rubyblock
 	url = https://github.com/nelstrom/vim-textobj-rubyblock.git
-[submodule "bundle/solarized"]
-	path = bundle/solarized
+[submodule "bundle/vim-colors-solarized"]
+	path = bundle/vim-colors-solarized
 	url = https://github.com/altercation/vim-colors-solarized.git
 [submodule "bundle/autoclose"]
 	path = bundle/autoclose

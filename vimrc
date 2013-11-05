@@ -1,22 +1,40 @@
 let mapleader = ","
 let maplocalleader = "\\"
 
+execute pathogen#infect()
 call pathogen#runtime_append_all_bundles()
 call pathogen#helptags()
 
-set nocompatible
+filetype plugin indent on " load the plugin and indent settings for the detected filetype
+syntax on
 
+set nocompatible
+set encoding=utf-8
+set history=500
 set title
 set number
 set ruler
 set scrolloff=3
-syntax on
+set laststatus=2                   " Status bar
+set showcmd                        "Show (partial) command in the status line
+set showmatch
+set backspace=indent,eol,start     "allow backspacing over everything in insert mode
+set autoindent                     " always set autoindenting on "
+set background=dark
+set ruler                          " show the cursor position all the time
+set showcmd                        " display incomplete commands
+set backupdir=$HOME/.vim/backup
+set directory=$HOME/.vim/backup    " Don't clutter my dirs up with swp and tmp files
+set autoread
+set noesckeys                      " Get rid of the delay when hitting esc! "
+set shiftround                     " When at 3 spaces and I hit >>, go to 4, not 5.
+set paste
+set nofoldenable                   " Say no to code folding...  "
+set grepprg=ag                     " Use Silver Searcher instead of grep
+
 
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
-
-" Set encoding
-set encoding=utf-8
 
 " Whitespace stuff
 set nowrap
@@ -35,9 +53,6 @@ set smartcase
 " Tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
-
-" Status bar
-set laststatus=2
 
 " Without setting this, ZoomWin restores windows in a way that causes
 " equalalways behavior to be triggered the next time CommandT is used.
@@ -88,12 +103,6 @@ au BufRead,BufNewFile *.txt call s:setupWrapping()
 " make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
 au FileType python set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
 
-" allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-
-" load the plugin and indent settings for the detected filetype
-filetype plugin indent on
-
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
@@ -135,11 +144,6 @@ set modelines=10
 let g:solarized_termtrans = 1
 let g:solarized_termcolors=256
 colorscheme solarized
-set background=dark
-
-" Directories for swp files
-set backupdir=$HOME/.vim/backup
-set directory=$HOME/.vim/backup
 
 " Turn off jslint errors by default
 let g:JSLintHighlightErrorLine = 0
@@ -149,9 +153,6 @@ let macvim_hig_shift_movement = 1
 
 " % to bounce from do to end etc.
 runtime! macros/matchit.vim
-
-" Show (partial) command in the status line
-set showcmd
 
 " Settings for VimClojure
 "let g:clj_hightlight_builtins=1 " Highlight Clojure's builtins

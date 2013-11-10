@@ -34,3 +34,6 @@
 [submodule "bundle/vim-classpath.git"]
 	path = bundle/vim-classpath.git
 	url = git://github.com/tpope/vim-classpath.git
+[submodule "bundle/paredit"]
+	path = bundle/paredit
+	url = https://github.com/vim-scripts/paredit.vim

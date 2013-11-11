@@ -1,5 +1,4 @@
 let mapleader = ","
-let maplocalleader = "\\"
 
 execute pathogen#infect()
 call pathogen#runtime_append_all_bundles()
@@ -13,7 +12,7 @@ set encoding=utf-8
 set history=500
 set title
 set number
-set ruler
+set ruler                          " show the cursor position all the time
 set scrolloff=3
 set laststatus=2                   " Status bar
 set showcmd                        "Show (partial) command in the status line
@@ -21,7 +20,6 @@ set showmatch
 set backspace=indent,eol,start     "allow backspacing over everything in insert mode
 set autoindent                     " always set autoindenting on "
 set background=dark
-set ruler                          " show the cursor position all the time
 set showcmd                        " display incomplete commands
 set backupdir=$HOME/.vim/backup
 set directory=$HOME/.vim/backup    " Don't clutter my dirs up with swp and tmp files

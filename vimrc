@@ -1,8 +1,8 @@
 let mapleader = ","
 
 execute pathogen#infect()
-call pathogen#runtime_append_all_bundles()
-call pathogen#helptags()
+"call pathogen#runtime_append_all_bundles()
+"call pathogen#helptags()
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 syntax on
@@ -56,6 +56,8 @@ set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 " equalalways behavior to be triggered the next time CommandT is used.
 " This is likely a bludgeon to solve some other issue, but it works
 set noequalalways
+
+set t_Co=256
 
 " Command-T configuration
 let g:CommandTMaxHeight=20
@@ -156,6 +158,14 @@ runtime! macros/matchit.vim
 "let g:clj_hightlight_builtins=1 " Highlight Clojure's builtins
 "let vimclojure#ParenRainbow=1       " Rainbow parentheses'!
 "let vimclojure#WantNailgun = 1
+
+let g:rbpt_max = 16
+let g:rbpt_loadcmd_toggle = 0
+
+au VimEnter * RainbowParenthesesToggle
+au Syntax * RainbowParenthesesLoadRound
+au Syntax * RainbowParenthesesLoadSquare
+au Syntax * RainbowParenthesesLoadBraces
 
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))

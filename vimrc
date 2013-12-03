@@ -20,8 +20,8 @@ Bundle 'tpope/vim-classpath'
 Bundle 'guns/vim-clojure-static'
 Bundle 'airblade/vim-gitgutter'
 Bundle 'tpope/vim-fireplace'
-Bundle 'vim-scripts/paredit'
-Bundle 'kien/rainbow_parentheses'
+Bundle 'vim-scripts/paredit.vim'
+Bundle 'kien/rainbow_parentheses.vim'
 
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype

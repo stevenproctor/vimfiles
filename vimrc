@@ -1,8 +1,28 @@
 let mapleader = ","
 
-execute pathogen#infect()
-"call pathogen#runtime_append_all_bundles()
-"call pathogen#helptags()
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+" let Vundle manage Vundle
+" required! 
+Bundle 'gmarik/vundle'
+
+" My bundles here:
+"
+" original repos on GitHub
+Bundle 'godlygeek/tabular'
+Bundle 'kana/vim-textobj-user'
+Bundle 'nelstrom/vim-textobj-rubyblock'
+Bundle 'altercation/vim-colors-solarized'
+Bundle 'Townk/vim-autoclose'
+Bundle 'jimenezrick/vimerl'
+Bundle 'tpope/vim-classpath'
+Bundle 'guns/vim-clojure-static'
+Bundle 'airblade/vim-gitgutter'
+Bundle 'tpope/vim-fireplace'
+Bundle 'vim-scripts/paredit'
+Bundle 'kien/rainbow_parentheses'
+
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 syntax on
@@ -12,9 +32,9 @@ set encoding=utf-8
 set history=500
 set title
 set number
-set ruler                          " show the cursor position all the time
 set scrolloff=3
 set laststatus=2                   " Status bar
+set ruler                          " show the cursor position all the time
 set showcmd                        "Show (partial) command in the status line
 set showmatch
 set backspace=indent,eol,start     "allow backspacing over everything in insert mode

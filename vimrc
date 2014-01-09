@@ -3,6 +3,7 @@ let mapleader = ","
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+
 " let Vundle manage Vundle
 " required! 
 Bundle 'gmarik/vundle'
@@ -22,8 +23,6 @@ Bundle 'airblade/vim-gitgutter'
 Bundle 'tpope/vim-fireplace'
 Bundle 'vim-scripts/paredit.vim'
 Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'scrooloose/syntastic'
-
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 syntax on
@@ -77,8 +76,6 @@ set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 " equalalways behavior to be triggered the next time CommandT is used.
 " This is likely a bludgeon to solve some other issue, but it works
 set noequalalways
-
-set t_Co=256
 
 " Command-T configuration
 let g:CommandTMaxHeight=20
@@ -144,10 +141,6 @@ nmap <C-Down> ]e
 vmap <C-Up> [egv
 vmap <C-Down> ]egv
 
-" Enable syntastic syntax checking
-let g:syntastic_enable_signs=1
-let g:syntastic_quiet_warnings=1
-
 " gist-vim defaults
 if has("mac")
   let g:gist_clip_command = 'pbcopy'
@@ -160,6 +153,8 @@ let g:gist_open_browser_after_post = 1
 " Use modeline overrides
 set modeline
 set modelines=10
+
+set t_Co=256
 
 " Default color scheme
 let g:solarized_termtrans = 1

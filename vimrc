@@ -23,6 +23,8 @@ Bundle 'airblade/vim-gitgutter'
 Bundle 'tpope/vim-fireplace'
 Bundle 'vim-scripts/paredit.vim'
 Bundle 'kien/rainbow_parentheses.vim'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-repeat'
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 syntax on

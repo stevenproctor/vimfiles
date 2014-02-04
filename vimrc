@@ -1,5 +1,3 @@
-let mapleader = ","
-
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
@@ -193,5 +191,8 @@ endif
 nmap <Enter> :nohlsearch<Enter>/<BS>
 
 set guifont=Inconsolata
+
+"Marked App
+nnoremap <leader>m :silent !open -a Marked.app '%:p'<cr>
 
 au! BufWritePost .vimrc source %

@@ -23,6 +23,7 @@ Bundle 'vim-scripts/paredit.vim'
 Bundle 'kien/rainbow_parentheses.vim'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
+Bundle 'thoughtbot/vim-rspec'
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 syntax on
@@ -194,5 +195,11 @@ set guifont=Inconsolata
 
 "Marked App
 nnoremap <leader>m :silent !open -a Marked.app '%:p'<cr>
+
+" RSpec.vim mappings
+map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>s :call RunNearestSpec()<CR>
+map <Leader>l :call RunLastSpec()<CR>
+map <Leader>a :call RunAllSpecs()<CR>
 
 au! BufWritePost .vimrc source %

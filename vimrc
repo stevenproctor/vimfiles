@@ -15,6 +15,7 @@ Bundle 'nelstrom/vim-textobj-rubyblock'
 Bundle 'altercation/vim-colors-solarized'
 Bundle 'Townk/vim-autoclose'
 Bundle 'jimenezrick/vimerl'
+Bundle 'edkolev/erlang-motions.vim'
 Bundle 'tpope/vim-classpath'
 Bundle 'guns/vim-clojure-static'
 Bundle 'airblade/vim-gitgutter'
@@ -95,6 +96,9 @@ map <C-\> :tnext<CR>
 if has("autocmd")
   au BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
     \| exe "normal g'\"" | endif
+
+  autocmd BufRead,BufNewFile *.erl,*.es.*.hrl,*.yaws,*.xrl set expandtab
+  au BufNewFile,BufRead *.erl,*.es,*.hrl,*.yaws,*.xrl setf erlang
 endif
 
 function s:setupWrapping()

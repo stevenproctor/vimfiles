@@ -1,10 +1,10 @@
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
+set rtp+=~/.vim/bundle/Vundle.vim
+call vundle#begin()
 
 
 " let Vundle manage Vundle
 " required! 
-Bundle 'gmarik/vundle'
+Bundle 'gmarik/Vundle.vim'
 
 " My bundles here:
 "
@@ -29,7 +29,11 @@ Bundle 'thoughtbot/vim-rspec'
 Bundle 'scrooloose/syntastic'
 Bundle 'jgdavey/tslime.vim'
 
+call vundle#end()
+
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
+set t_Co=256
+
 syntax on
 
 set nocompatible
@@ -162,7 +166,6 @@ let g:gist_open_browser_after_post = 1
 set modeline
 set modelines=10
 
-set t_Co=256
 
 " Default color scheme
 let g:solarized_termtrans = 1
@@ -183,8 +186,25 @@ runtime! macros/matchit.vim
 "let vimclojure#ParenRainbow=1       " Rainbow parentheses'!
 "let vimclojure#WantNailgun = 1
 
-let g:rbpt_max = 16
+let g:rbpt_max = 15
 let g:rbpt_loadcmd_toggle = 0
+let g:rbpt_colorpairs = [
+    \ ['white',       'DarkOrchid3'],
+    \ ['gray',        'SeaGreen3'],
+    \ ['yellow',      'firebrick3'],
+    \ ['blue',        'RoyalBlue3'],
+    \ ['green',       'DarkOrchid3'],
+    \ ['cyan',        'SeaGreen3'],
+    \ ['magenta',     'RoyalBlue3'],
+    \ ['red',         'DarkOrchid3'],
+    \ ['brown',       'RoyalBlue3'],
+    \ ['darkgray',    'DarkOrchid3'],
+    \ ['darkblue',    'firebrick3'],
+    \ ['darkgreen',   'RoyalBlue3'],
+    \ ['darkcyan',    'SeaGreen3'],
+    \ ['darkmagenta', 'DarkOrchid3'],
+    \ ['darkred',     'firebrick3'],
+    \ ]
 
 au VimEnter * RainbowParenthesesToggle
 au Syntax * RainbowParenthesesLoadRound

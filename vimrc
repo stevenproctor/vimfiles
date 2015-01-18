@@ -1,3 +1,6 @@
+set nocompatible
+filetype off
+
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
@@ -28,9 +31,19 @@ Plugin 'tpope/vim-pathogen'
 Plugin 'thoughtbot/vim-rspec'
 Plugin 'scrooloose/syntastic'
 Plugin 'jgdavey/tslime.vim'
+
+" Elixir Bundles
 Plugin 'elixir-lang/vim-elixir'
 
+" Erlang Bundles
+Plugin 'vim-erlang/vim-erlang-runtime'
+Plugin 'vim-erlang/vim-erlang-compiler'
+Plugin 'vim-erlang/vim-erlang-omnicomplete'
+Plugin 'vim-erlang/vim-erlang-tags'
+Plugin 'vim-scripts/vim-erlang-skeleteons'
+
 call vundle#end()
+
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 set exrc " allow project level vimrc files
@@ -39,7 +52,6 @@ set t_Co=256
 
 syntax on
 
-set nocompatible
 set encoding=utf-8
 set history=500
 set title
@@ -108,41 +120,24 @@ if has("autocmd")
   au BufNewFile,BufRead *.erl,*.es,*.hrl,*.yaws,*.xrl setf erlang
 endif
 
-function s:setupWrapping()
-  set wrap
-  set wrapmargin=2
-  set textwidth=72
-endfunction
-
-function s:setupMarkup()
-  call s:setupWrapping()
-  map <buffer> <Leader>p :Hammer<CR>
-endfunction
-
 " make uses real tabs
 au FileType make set noexpandtab
 
 " Thorfile, Rakefile, Vagrantfile and Gemfile are Ruby
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
 
-" md, markdown, and mk are markdown and define buffer-local preview
-au BufRead,BufNewFile *.{md,markdown,mdown,mkd,mkdn} call s:setupMarkup()
-
 " add json syntax highlighting
 au BufNewFile,BufRead *.json set ft=javascript
-
-au BufRead,BufNewFile *.txt call s:setupWrapping()
 
 " make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
 au FileType python set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
 
+" make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
+au FileType erlang set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
+
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
-
-" Opens a tab edit command with the path of the currently edited file filled in
-" Normal mode: <Leader>t
-map <Leader>te :tabe <C-R>=expand("%:p:h") . "/" <CR>
 
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
@@ -223,10 +218,12 @@ nmap <Enter> :nohlsearch<Enter>/<BS>
 
 set guifont=Inconsolata
 
+map <Leader>ah S<a href="" target="_blank"><CR>
+
 "Marked App
 nnoremap <leader>m :silent !open -a Marked.app '%:p'<cr>
 
-" RSpec.vim mappings
+" vim-rspec mappings
 map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
@@ -236,3 +233,4 @@ map <Leader>a :call RunAllSpecs()<CR>
 cmap w!! w !sudo tee % >/dev/null
 
 au! BufWritePost .vimrc source %
+

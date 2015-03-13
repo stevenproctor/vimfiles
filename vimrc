@@ -4,30 +4,31 @@ call vundle#begin()
 
 " let Vundle manage Vundle
 " required! 
-Bundle 'gmarik/Vundle.vim'
+Plugin 'gmarik/Vundle.vim'
 
 " My bundles here:
 "
 " original repos on GitHub
-Bundle 'godlygeek/tabular'
-Bundle 'kana/vim-textobj-user'
-Bundle 'nelstrom/vim-textobj-rubyblock'
-Bundle 'altercation/vim-colors-solarized'
-Bundle 'Townk/vim-autoclose'
-Bundle 'jimenezrick/vimerl'
-Bundle 'edkolev/erlang-motions.vim'
-Bundle 'tpope/vim-classpath'
-Bundle 'guns/vim-clojure-static'
-Bundle 'airblade/vim-gitgutter'
-Bundle 'tpope/vim-fireplace'
-Bundle 'vim-scripts/paredit.vim'
-Bundle 'kien/rainbow_parentheses.vim'
-Bundle 'tpope/vim-surround'
-Bundle 'tpope/vim-repeat'
-Bundle 'tpope/vim-pathogen'
-Bundle 'thoughtbot/vim-rspec'
-Bundle 'scrooloose/syntastic'
-Bundle 'jgdavey/tslime.vim'
+Plugin 'godlygeek/tabular'
+Plugin 'kana/vim-textobj-user'
+Plugin 'nelstrom/vim-textobj-rubyblock'
+Plugin 'altercation/vim-colors-solarized'
+Plugin 'Townk/vim-autoclose'
+Plugin 'jimenezrick/vimerl'
+Plugin 'edkolev/erlang-motions.vim'
+Plugin 'tpope/vim-classpath'
+Plugin 'guns/vim-clojure-static'
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fireplace'
+Plugin 'vim-scripts/paredit.vim'
+Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'tpope/vim-surround'
+Plugin 'tpope/vim-repeat'
+Plugin 'tpope/vim-pathogen'
+Plugin 'thoughtbot/vim-rspec'
+Plugin 'scrooloose/syntastic'
+Plugin 'jgdavey/tslime.vim'
+Plugin 'elixir-lang/vim-elixir'
 
 call vundle#end()
 

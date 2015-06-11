@@ -33,6 +33,8 @@ Plugin 'elixir-lang/vim-elixir'
 call vundle#end()
 
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
+set exrc " allow project level vimrc files
+
 set t_Co=256
 
 syntax on
@@ -229,5 +231,8 @@ map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
+
+" Map w!! to write readonly files
+cmap w!! w !sudo tee % >/dev/null
 
 au! BufWritePost .vimrc source %

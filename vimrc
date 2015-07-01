@@ -17,7 +17,6 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'Townk/vim-autoclose'
-Plugin 'jimenezrick/vimerl'
 Plugin 'edkolev/erlang-motions.vim'
 Plugin 'tpope/vim-classpath'
 Plugin 'guns/vim-clojure-static'
@@ -58,7 +57,6 @@ set title
 set number
 set scrolloff=3
 set laststatus=2                   " Status bar
-set ruler                          " show the cursor position all the time
 set showcmd                        "Show (partial) command in the status line
 set showmatch
 set backspace=indent,eol,start     "allow backspacing over everything in insert mode
@@ -73,6 +71,7 @@ set shiftround                     " When at 3 spaces and I hit >>, go to 4, not
 set paste
 set nofoldenable                   " Say no to code folding...  "
 set grepprg=ag                     " Use Silver Searcher instead of grep
+set ruler                          " show the cursor position all the time
 
 
 nnoremap <C-e> 3<C-e>

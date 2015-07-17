@@ -33,6 +33,7 @@ Plugin 'jgdavey/tslime.vim'
 
 " Elixir Bundles
 Plugin 'elixir-lang/vim-elixir'
+Plugin 'editorconfig/editorconfig-vim'
 
 " Erlang Bundles
 Plugin 'vim-erlang/vim-erlang-runtime'

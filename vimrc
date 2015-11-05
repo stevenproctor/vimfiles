@@ -42,6 +42,9 @@ Plugin 'vim-erlang/vim-erlang-omnicomplete'
 Plugin 'vim-erlang/vim-erlang-tags'
 Plugin 'vim-scripts/vim-erlang-skeleteons'
 
+" Elm Bundles
+Plugin 'lambdatoast/elm.vim'
+
 call vundle#end()
 
 

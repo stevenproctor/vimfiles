@@ -221,7 +221,7 @@ nmap <Enter> :nohlsearch<Enter>/<BS>
 
 set guifont=Inconsolata
 
-map <Leader>ah S<a href="" target="_blank"><CR>
+map <Leader>ah S<a href="" target="_blank" rel="noopener noreferrer"><CR>
 
 "Marked App
 nnoremap <leader>m :silent !open -a Marked.app '%:p'<cr>

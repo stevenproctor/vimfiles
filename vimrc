@@ -22,6 +22,7 @@ Plugin 'tpope/vim-classpath'
 Plugin 'guns/vim-clojure-static'
 Plugin 'airblade/vim-gitgutter'
 Plugin 'tpope/vim-fireplace'
+Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/paredit.vim'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'tpope/vim-surround'
@@ -30,6 +31,9 @@ Plugin 'tpope/vim-pathogen'
 Plugin 'thoughtbot/vim-rspec'
 Plugin 'scrooloose/syntastic'
 Plugin 'jgdavey/tslime.vim'
+
+" Vim Tmux niceties...
+Plugin 'benmills/vimux'
 
 " Elixir Bundles
 Plugin 'elixir-lang/vim-elixir'
@@ -44,6 +48,12 @@ Plugin 'vim-scripts/vim-erlang-skeleteons'
 
 " Elm Bundles
 Plugin 'lambdatoast/elm.vim'
+
+"PureScript Bundles
+Plugin 'raichoo/purescript-vim'
+
+"Ruby Bundles
+Plugin 'vim-ruby/vim-ruby'
 
 call vundle#end()
 
@@ -98,6 +108,11 @@ set smartcase
 " Tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
+
+"Syntastic
+let g:syntastic_aggregate_errors = 1
+let g:syntastic_javascript_checkers = ['jshint', 'jscs']
+
 
 " Without setting this, ZoomWin restores windows in a way that causes
 " equalalways behavior to be triggered the next time CommandT is used.
@@ -219,14 +234,27 @@ endif
 
 nmap <Enter> :nohlsearch<Enter>/<BS>
 
-set guifont=Inconsolata
+" set guifont=Inconsolata
+"set guifont=Fira\ Code
+set guifont=Hasklig
 
 map <Leader>ah S<a href="" target="_blank" rel="noopener noreferrer"><CR>
+
+" Run Commands in Tmux window
+map <Leader>vp :VimuxPromptCommand<CR>
+map <Leader>vl :VimuxRunLastCommand<CR>
+map <Leader>vi :VimuxInspectRunner<CR>
 
 "Marked App
 nnoremap <leader>m :silent !open -a Marked.app '%:p'<cr>
 
+" tmux setup with tslime for vim
+let g:tslime_always_current_session = 1
+let g:tslime_always_current_window = 1
+
 " vim-rspec mappings
+let g:rspec_command = 'call Send_to_Tmux("bundle exec rspec {spec}\n")'
+
 map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>

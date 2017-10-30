@@ -17,42 +17,59 @@ Plugin 'kana/vim-textobj-user'
 Plugin 'nelstrom/vim-textobj-rubyblock'
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'Townk/vim-autoclose'
-Plugin 'edkolev/erlang-motions.vim'
 Plugin 'tpope/vim-classpath'
-Plugin 'guns/vim-clojure-static'
-Plugin 'airblade/vim-gitgutter'
-Plugin 'tpope/vim-fireplace'
-Plugin 'tpope/vim-fugitive'
 Plugin 'vim-scripts/paredit.vim'
 Plugin 'kien/rainbow_parentheses.vim'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-pathogen'
 Plugin 'thoughtbot/vim-rspec'
-Plugin 'scrooloose/syntastic'
+"Plugin 'scrooloose/syntastic'
 Plugin 'jgdavey/tslime.vim'
+
+" Linting
+Plugin 'w0rp/ale'
 
 " Vim Tmux niceties...
 Plugin 'benmills/vimux'
+
+" Git
+Plugin 'airblade/vim-gitgutter'
+Plugin 'tpope/vim-fugitive'
+
+" Clojure
+Plugin 'tpope/vim-fireplace'
+Plugin 'guns/vim-clojure-static'
 
 " Elixir Bundles
 Plugin 'elixir-lang/vim-elixir'
 Plugin 'editorconfig/editorconfig-vim'
 
+" Elm Bundles
+Plugin 'lambdatoast/elm.vim'
+
 " Erlang Bundles
+Plugin 'edkolev/erlang-motions.vim'
 Plugin 'vim-erlang/vim-erlang-runtime'
 Plugin 'vim-erlang/vim-erlang-compiler'
 Plugin 'vim-erlang/vim-erlang-omnicomplete'
 Plugin 'vim-erlang/vim-erlang-tags'
 Plugin 'vim-scripts/vim-erlang-skeleteons'
 
-" Elm Bundles
-Plugin 'lambdatoast/elm.vim'
+" Idris Bundles
+Plugin 'idris-hackers/idris-vim'
 
-"PureScript Bundles
+" JavaScript Bundles
+Plugin 'pangloss/vim-javascript'
+Plugin 'mxw/vim-jsx' " React JSX support
+
+" PureScript Bundles
 Plugin 'raichoo/purescript-vim'
 
-"Ruby Bundles
+" Reason Bundles
+Plugin 'reasonml-editor/vim-reason'
+
+" Ruby Bundles
 Plugin 'vim-ruby/vim-ruby'
 
 call vundle#end()
@@ -108,6 +125,9 @@ set smartcase
 " Tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
+
+" Local Leader
+"let maplocalleader = "\\"
 
 "Syntastic
 let g:syntastic_aggregate_errors = 1
@@ -255,10 +275,34 @@ let g:tslime_always_current_window = 1
 " vim-rspec mappings
 let g:rspec_command = 'call Send_to_Tmux("bundle exec rspec {spec}\n")'
 
+map <leader>` :source ~/.vimrc<CR>
 map <Leader>t :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
+
+let g:ale_sign_error = '>>'
+let g:ale_sign_warning = '--'
+let g:ale_sign_column_always = 1
+
+
+" Set this setting in vimrc if you want to fix files automatically on save.
+let g:ale_fix_on_save = 1
+
+
+" Idris mappings
+let g:idris_indent_if = 3
+let g:idris_indent_case = 5
+let g:idris_indent_let = 4
+let g:idris_indent_where = 6
+let g:idris_indent_do = 3
+let g:idris_indent_rewrite = 8
+
+" JavaScript settings
+let g:javascript_plugin_flow = 1
+let g:javascript_plugin_jsdoc = 1
+let g:jsx_ext_required = 0
+
 
 " Map w!! to write readonly files
 cmap w!! w !sudo tee % >/dev/null

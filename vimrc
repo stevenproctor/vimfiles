@@ -1,9 +1,11 @@
-set nocompatible
+
 filetype off
 
 set rtp+=~/.vim/bundle/Vundle.vim
 call vundle#begin()
 
+set undodir=~/.vim/undodir
+set undofile "Maintain undo history between sessions
 
 " let Vundle manage Vundle
 " required! 
@@ -19,13 +21,18 @@ Plugin 'altercation/vim-colors-solarized'
 Plugin 'Townk/vim-autoclose'
 Plugin 'tpope/vim-classpath'
 Plugin 'vim-scripts/paredit.vim'
-Plugin 'kien/rainbow_parentheses.vim'
+"Plugin 'kien/rainbow_parentheses.vim'
+Plugin 'luochen1990/rainbow'
 Plugin 'tpope/vim-surround'
 Plugin 'tpope/vim-repeat'
 Plugin 'tpope/vim-pathogen'
 Plugin 'thoughtbot/vim-rspec'
 "Plugin 'scrooloose/syntastic'
 Plugin 'jgdavey/tslime.vim'
+
+" Language Server Protocol
+Plugin 'prabirshrestha/async.vim'
+Plugin 'prabirshrestha/vim-lsp'
 
 " Linting
 Plugin 'w0rp/ale'
@@ -46,7 +53,8 @@ Plugin 'elixir-lang/vim-elixir'
 Plugin 'editorconfig/editorconfig-vim'
 
 " Elm Bundles
-Plugin 'lambdatoast/elm.vim'
+" Plugin 'lambdatoast/elm.vim'
+Plugin 'ElmCast/elm-vim'
 
 " Erlang Bundles
 Plugin 'edkolev/erlang-motions.vim'
@@ -60,8 +68,18 @@ Plugin 'vim-scripts/vim-erlang-skeleteons'
 Plugin 'idris-hackers/idris-vim'
 
 " JavaScript Bundles
+Plugin 'ryanolsonx/vim-lsp-javascript'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx' " React JSX support
+
+if executable('typescript-language-server')
+  au User lsp_setup call lsp#register_server({
+     \ 'name': 'javascript support using typescript-language-server',
+     \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+     \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
+     \ 'whitelist': ['javascript', 'javascript.jsx'],
+     \ })
+endif
 
 " PureScript Bundles
 Plugin 'raichoo/purescript-vim'
@@ -71,17 +89,29 @@ Plugin 'reasonml-editor/vim-reason'
 
 " Ruby Bundles
 Plugin 'vim-ruby/vim-ruby'
+if executable('solargraph')
+    " gem install solargraph
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'solargraph',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+        \ 'initialization_options': {"diagnostics": "true"},
+        \ 'whitelist': ['ruby'],
+        \ })
+endif
 
 call vundle#end()
 
-
+set path+=**
+set wildmenu
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 set exrc " allow project level vimrc files
+
 
 set t_Co=256
 
 syntax on
 
+set nocompatible
 set encoding=utf-8
 set history=500
 set title
@@ -130,8 +160,9 @@ set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 "let maplocalleader = "\\"
 
 "Syntastic
-let g:syntastic_aggregate_errors = 1
-let g:syntastic_javascript_checkers = ['jshint', 'jscs']
+"let g:syntastic_aggregate_errors = 1
+"let g:syntastic_javascript_checkers = ['jshint', 'jscs']
+"let g:syntastic_ruby_checkers = ['rubocop']
 
 
 " Without setting this, ZoomWin restores windows in a way that causes
@@ -146,7 +177,8 @@ let g:CommandTMaxHeight=20
 map <Leader><Leader> :ZoomWin<CR>
 
 " CTags
-map <Leader>crt :!ctags --extra=+f -R *<CR><CR>
+command! MakeTags !ctags --extra=+f -R *<CR><CR>
+map <Leader>crt :MakeTags<CR>
 map <C-\> :tnext<CR>
 
 " Remember last location in file
@@ -170,8 +202,11 @@ au BufNewFile,BufRead *.json set ft=javascript
 " make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
 au FileType python set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
 
-" make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
 au FileType erlang set softtabstop=4 tabstop=4 shiftwidth=4 textwidth=79
+
+au FileType ruby set softtabstop=2 tabstop=2 shiftwidth=2 textwidth=79
+
+" au FileType elm set softtabstop=2 tabstop=2 shiftwidth=2 textwidth=79
 
 " Opens an edit command with the path of the currently edited file filled in
 " Normal mode: <Leader>e
@@ -242,10 +277,10 @@ let g:rbpt_colorpairs = [
     \ ['darkred',     'firebrick3'],
     \ ]
 
-au VimEnter * RainbowParenthesesToggle
-au Syntax * RainbowParenthesesLoadRound
-au Syntax * RainbowParenthesesLoadSquare
-au Syntax * RainbowParenthesesLoadBraces
+let g:rainbow_active = 1
+"au Syntax * RainbowParenthesesLoadRound
+"au Syntax * RainbowParenthesesLoadSquare
+"au Syntax * RainbowParenthesesLoadBraces
 
 " Include user's local vim config
 if filereadable(expand("~/.vimrc.local"))
@@ -265,8 +300,11 @@ map <Leader>vp :VimuxPromptCommand<CR>
 map <Leader>vl :VimuxRunLastCommand<CR>
 map <Leader>vi :VimuxInspectRunner<CR>
 
+"Git Integration
+
+
 "Marked App
-nnoremap <leader>m :silent !open -a Marked.app '%:p'<cr>
+nnoremap <leader>m :exec ':silent !open -a Marked.app %' <cr>
 
 " tmux setup with tslime for vim
 let g:tslime_always_current_session = 1
@@ -289,6 +327,13 @@ let g:ale_sign_column_always = 1
 " Set this setting in vimrc if you want to fix files automatically on save.
 let g:ale_fix_on_save = 1
 
+" Language Server Protocol settings
+let g:lsp_signs_enabled = 1         " enable signs
+let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+
+let g:lsp_signs_error = {'text': '✗'}
+let g:lsp_signs_warning = {'text': '‼'} " icons require GUI
+let g:lsp_signs_hint = {'text': '🔎'} " icons require GUI
 
 " Idris mappings
 let g:idris_indent_if = 3
@@ -301,8 +346,18 @@ let g:idris_indent_rewrite = 8
 " JavaScript settings
 let g:javascript_plugin_flow = 1
 let g:javascript_plugin_jsdoc = 1
-let g:jsx_ext_required = 0
+let g:jsx_ext_required = 1
 
+"Elm settings
+let g:elm_jump_to_error = 0
+let g:elm_make_output_file = "elm.js"
+let g:elm_make_show_warnings = 0
+"let g:elm_syntastic_show_warnings = 1
+let g:elm_browser_command = ""
+let g:elm_detailed_complete = 0
+let g:elm_format_autosave = 1
+let g:elm_format_fail_silently = 0
+let g:elm_setup_keybindings = 1
 
 " Map w!! to write readonly files
 cmap w!! w !sudo tee % >/dev/null

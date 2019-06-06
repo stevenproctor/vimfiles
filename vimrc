@@ -71,7 +71,6 @@ Plugin 'idris-hackers/idris-vim'
 Plugin 'ryanolsonx/vim-lsp-javascript'
 Plugin 'pangloss/vim-javascript'
 Plugin 'mxw/vim-jsx' " React JSX support
-
 if executable('typescript-language-server')
   au User lsp_setup call lsp#register_server({
      \ 'name': 'javascript support using typescript-language-server',
@@ -79,6 +78,19 @@ if executable('typescript-language-server')
      \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
      \ 'whitelist': ['javascript', 'javascript.jsx'],
      \ })
+endif
+
+
+" TypeScript Bundles
+Plugin 'leafgarland/typescript-vim'
+Plugin 'ryanolsonx/vim-lsp-typescript'
+if executable('typescript-language-server')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'typescript-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+        \ 'whitelist': ['typescript', 'typescript.tsx'],
+        \ })
 endif
 
 " PureScript Bundles
@@ -177,7 +189,7 @@ let g:CommandTMaxHeight=20
 map <Leader><Leader> :ZoomWin<CR>
 
 " CTags
-command! MakeTags !ctags --extra=+f -R *<CR><CR>
+command! MakeTags !ctags --exclude="@.ctagsignore" --extras=+f -R *<CR><CR>
 map <Leader>crt :MakeTags<CR>
 map <C-\> :tnext<CR>
 

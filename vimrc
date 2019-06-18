@@ -117,6 +117,7 @@ set path+=**
 set wildmenu
 filetype plugin indent on " load the plugin and indent settings for the detected filetype
 set exrc " allow project level vimrc files
+set secure
 
 
 set t_Co=256
@@ -145,6 +146,7 @@ set paste
 set nofoldenable                   " Say no to code folding...  "
 set grepprg=ag                     " Use Silver Searcher instead of grep
 set ruler                          " show the cursor position all the time
+
 
 
 nnoremap <C-e> 3<C-e>

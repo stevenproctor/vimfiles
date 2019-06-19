@@ -226,6 +226,9 @@ au FileType ruby set softtabstop=2 tabstop=2 shiftwidth=2 textwidth=79
 " Normal mode: <Leader>e
 map <Leader>e :e <C-R>=expand("%:p:h") . "/" <CR>
 
+" JSON Pretty Print
+map <Leader>jpp :%!python -m json.tool <CR>
+
 " Inserts the path of the currently edited file into a command
 " Command mode: Ctrl+P
 cmap <C-P> <C-R>=expand("%:p:h") . "/" <CR>

@@ -190,6 +190,9 @@ set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 "let g:syntastic_javascript_checkers = ['jshint', 'jscs']
 "let g:syntastic_ruby_checkers = ['rubocop']
 
+"Paredit
+let g:paredit_smartjump = 1
+
 
 " Without setting this, ZoomWin restores windows in a way that causes
 " equalalways behavior to be triggered the next time CommandT is used.

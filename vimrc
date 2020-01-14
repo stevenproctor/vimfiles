@@ -38,6 +38,9 @@ Plugin 'prabirshrestha/vim-lsp'
 " Linting
 Plugin 'w0rp/ale'
 
+" Formatting
+Plugin 'neomake/neomake'
+
 " Vim Tmux niceties...
 Plugin 'benmills/vimux'
 

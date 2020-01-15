@@ -88,6 +88,7 @@ command! PackStatus packadd minpac | source ~/.vimrc | call minpac#status()
 "   Plugin 'benmills/vimux'
 
 
+
 set path+=**
 set wildmenu
 set exrc " allow project level vimrc files
@@ -115,11 +116,10 @@ set directory=$HOME/.vim/backup    " Don't clutter my dirs up with swp and tmp f
 set autoread
 set noesckeys                      " Get rid of the delay when hitting esc! "
 set shiftround                     " When at 3 spaces and I hit >>, go to 4, not 5.
-set paste
 set nofoldenable                   " Say no to code folding...  "
 set grepprg=ag                     " Use Silver Searcher instead of grep
 set ruler                          " show the cursor position all the time
-
+set tags=tags
 
 
 nnoremap <C-e> 3<C-e>
@@ -167,7 +167,7 @@ let g:CommandTMaxHeight=20
 map <Leader><Leader> :ZoomWin<CR>
 
 " CTags
-command! MakeTags !ctags --exclude="@.ctagsignore" --extras=+f -R *<CR><CR>
+command! MakeTags !ctags --exclude="@.ctagsignore" --extras=+f -R `pwd`
 map <Leader>crt :MakeTags<CR>
 map <C-\> :tnext<CR>
 
@@ -262,6 +262,7 @@ set guifont=Hasklig
 
 "Surround with HTML Anchor tag
 map <Leader>ah S<a href="" target="_blank" rel="noopener noreferrer"><CR>
+vmap <Leader>l xi[<cr-"]()<esc>
 
 " Run Commands in Tmux window
 map <Leader>vp :VimuxPromptCommand<CR>
@@ -281,9 +282,14 @@ map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
 
+<<<<<<< Updated upstream
 " ===========================
 " ALE Linting settings
 " ===========================
+=======
+vmap <Leader>l xi[<c-r>"]()<esc>
+
+>>>>>>> Stashed changes
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
 let g:ale_sign_column_always = 1
@@ -428,16 +434,15 @@ let g:neomake_python_enabled_makers = ['flake8']
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
 
 au FileType ruby set softtabstop=2 tabstop=2 shiftwidth=2 textwidth=79
-
-"if executable('solargraph')
-"    " gem install solargraph
-"    au User lsp_setup call lsp#register_server({
-"        \ 'name': 'solargraph',
-"        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
-"        \ 'initialization_options': {"diagnostics": "true"},
-"        \ 'whitelist': ['ruby'],
-"        \ })
-"endif
+if executable('solargraph')
+    " gem install solargraph
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'solargraph',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'solargraph stdio']},
+        \ 'initialization_options': {"diagnostics": "true"},
+        \ 'whitelist': ['ruby'],
+        \ })
+endif
 " vim-rspec mappings
 let g:rspec_command = 'call Send_to_Tmux("bundle exec rspec {spec}\n")'
 " ======================

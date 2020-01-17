@@ -47,6 +47,7 @@ if exists('*minpac#init')
   call minpac#add('ryanolsonx/vim-lsp-javascript') " JavaScript
   call minpac#add('ryanolsonx/vim-lsp-python') " Python
   call minpac#add('ryanolsonx/vim-lsp-typescript') " TypeScript
+  call minpac#add('skywind3000/asyncrun.vim') " :AsyncRun
   call minpac#add('thoughtbot/vim-rspec')
   call minpac#add('tpope/vim-classpath')
   call minpac#add('tpope/vim-fireplace') " Clojure
@@ -167,7 +168,8 @@ let g:CommandTMaxHeight=20
 map <Leader><Leader> :ZoomWin<CR>
 
 " CTags
-command! MakeTags !ctags --exclude="@.ctagsignore" --extras=+f -R `pwd`
+" command! MakeTags !ctags --exclude="@.ctagsignore" --extras=+f -R `pwd`
+command! MakeTags AsyncRun ctags --exclude="@.ctagsignore" --extras=+f -R *<CR><CR>
 map <Leader>crt :MakeTags<CR>
 map <C-\> :tnext<CR>
 
@@ -209,8 +211,9 @@ set modelines=10
 
 
 " Default color scheme
-let g:solarized_termtrans = 1
-let g:solarized_termcolors=256
+" let g:solarized_termtrans = 1
+" let g:solarized_termcolors=256
+" let g:solarized_termcolors= 16 | 256
 colorscheme solarized
 
 " MacVIM shift+arrow-keys behavior (required in .vimrc)
@@ -270,7 +273,9 @@ map <Leader>vl :VimuxRunLastCommand<CR>
 map <Leader>vi :VimuxInspectRunner<CR>
 
 "Marked App
-nnoremap <leader>m :exec ':silent !open -a Marked.app %' <cr>
+if executable('Marked.app')
+  nnoremap <leader>m :AsyncRun -mode=bang open -a Marked.app "$(VIM_FILENAME)" <cr>
+endif
 
 " tmux setup with tslime for vim
 let g:tslime_always_current_session = 1
@@ -282,14 +287,11 @@ map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
 
-<<<<<<< Updated upstream
+vmap <Leader>l xi[<c-r>"]()<esc>
+
 " ===========================
 " ALE Linting settings
 " ===========================
-=======
-vmap <Leader>l xi[<c-r>"]()<esc>
-
->>>>>>> Stashed changes
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
 let g:ale_sign_column_always = 1

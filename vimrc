@@ -32,13 +32,13 @@ if exists('*minpac#init')
   call minpac#add('ElmCast/elm-vim') " Elm
   call minpac#add('guns/vim-clojure-static') " Clojure
   call minpac#add('jgdavey/tslime.vim') " Send to Tmux
-  call minpac#add('kovisoft/paredit')
   call minpac#add('leafgarland/typescript-vim') " TypeScript
   call minpac#add('luochen1990/rainbow')
-  call minpac#add('hyhugh/coc-erlang_ls', {'do': 'yarn install --frozen-lockfile'})
+"  call minpac#add('hyhugh/coc-erlang_ls', {'do': 'yarn install --frozen-lockfile'})
   call minpac#add('idris-hackers/idris-vim') " Idris
   call minpac#add('mxw/vim-jsx') " React JSX support
-  call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
+"  call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
+"  call minpac#add('neoclide/coc-solargraph') " Ruby
   call minpac#add('neomake/neomake') " Linting/Make
   call minpac#add('nvie/vim-flake8') " Python
   call minpac#add('pangloss/vim-javascript') " JavaScript
@@ -157,9 +157,6 @@ set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 "let g:syntastic_javascript_checkers = ['jshint', 'jscs']
 "let g:syntastic_ruby_checkers = ['rubocop']
 
-"Paredit
-let g:paredit_smartjump = 1
-
 
 " Without setting this, ZoomWin restores windows in a way that causes
 " equalalways behavior to be triggered the next time CommandT is used.
@@ -270,7 +267,7 @@ set guifont=Hasklig
 
 "Surround with HTML Anchor tag
 map <Leader>ah S<a href="" target="_blank" rel="noopener noreferrer"><CR>
-vmap <Leader>l xi[<cr-"]()<esc>
+vmap <Leader>ml c[<C-r>"]()<esc>
 
 " Run Commands in Tmux window
 map <Leader>vp :VimuxPromptCommand<CR>
@@ -316,10 +313,26 @@ let g:ale_fix_on_save = 1
 " ======================================
 let g:lsp_signs_enabled = 1         " enable signs
 let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
+let g:lsp_highlight_references_enabled = 1
 
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_warning = {'text': '‼'} " icons require GUI
 let g:lsp_signs_hint = {'text': '🔎'} " icons require GUI
+
+augroup format_on_write_group
+  autocmd!
+  "autocmd BufWrite <buffer> LspDocumentFormatSync
+augroup END
+
+" Remap for format selected region
+xmap <leader>f  :LspDocumentRangeFormat<cr>
+nmap <leader>f  :LspDocumentRangeFormat<cr>
+
+xmap <leader>fa  :LspDocumentFormat<cr>
+nmap <leader>fa  :LspDocumentFormat<cr>
+
+nmap <leader>rn :LspRename<cr>
+
 " ======================================
 " End Language Server Protocol settings
 " ======================================
@@ -440,7 +453,10 @@ let g:neomake_python_enabled_makers = ['flake8']
 " Thorfile, Rakefile, Vagrantfile and Gemfile are Ruby
 au BufRead,BufNewFile {Gemfile,Rakefile,Vagrantfile,Thorfile,config.ru}    set ft=ruby
 
+:let ruby_foldable_groups = 'class module def do if { [ #'
+
 au FileType ruby set softtabstop=2 tabstop=2 shiftwidth=2 textwidth=79
+
 if executable('solargraph')
     " gem install solargraph
     au User lsp_setup call lsp#register_server({
@@ -450,7 +466,8 @@ if executable('solargraph')
         \ 'whitelist': ['ruby'],
         \ })
 endif
-" vim-rspec mappings
+
+"vim-rspec mappings
 let g:rspec_command = 'call Send_to_Tmux("bundle exec rspec {spec}\n")'
 " ======================
 " End Ruby Settings
@@ -474,123 +491,128 @@ endif
 
 
 
-" ===========================
-" coc.vim plugin settings
-" ===========================
-
-" Use tab for trigger completion with characters ahead and navigate.
-" Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-inoremap <silent><expr> <TAB>
-      \ pumvisible() ? "\<C-n>" :
-      \ <SID>check_back_space() ? "\<TAB>" :
-      \ coc#refresh()
-inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-
-function! s:check_back_space() abort
-  let col = col('.') - 1
-  return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-" Use <c-space> to trigger completion.
-inoremap <silent><expr> <c-space> coc#refresh()
-
-" Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-" Coc only does snippet and additional edit on confirm.
-inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-" Or use `complete_info` if your vim support it, like:
-" inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-
-" Use `[g` and `]g` to navigate diagnostics
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-" Remap keys for gotos
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-" Use K to show documentation in preview window
-nnoremap <silent> K :call <SID>show_documentation()<CR>
-
-function! s:show_documentation()
-  if (index(['vim','help'], &filetype) >= 0)
-    execute 'h '.expand('<cword>')
-  else
-    call CocAction('doHover')
-  endif
-endfunction
-
-" Highlight symbol under cursor on CursorHold
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" Remap for rename current word
-nmap <leader>rn <Plug>(coc-rename)
-
-" Remap for format selected region
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s).
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-  " Update signature help on jump placeholder
-  autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-augroup end
-
-" Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-
-" Remap for do codeAction of current line
-nmap <leader>ac  <Plug>(coc-codeaction)
-" Fix autofix problem of current line
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-" Create mappings for function text object, requires document symbols feature of languageserver.
-xmap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap if <Plug>(coc-funcobj-i)
-omap af <Plug>(coc-funcobj-a)
-
-" Use <TAB> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-nmap <silent> <TAB> <Plug>(coc-range-select)
-xmap <silent> <TAB> <Plug>(coc-range-select)
-
-" Use `:Format` to format current buffer
-command! -nargs=0 Format :call CocAction('format')
-
-" Use `:Fold` to fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-
-" use `:OR` for organize import of current buffer
-command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-
-" Add status line support, for integration with other plugin, checkout `:h coc-status`
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-
-" Using CocList
-" Show all diagnostics
-nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-" Manage extensions
-nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-" Show commands
-nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-" Find symbol of current document
-nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item.
-nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item.
-nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-" Resume latest coc list
-nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-
-" ===========================
-" coc.vim plugin settings
-" ===========================
+""" " ===========================
+""" " coc.vim plugin settings
+""" " ===========================
+""" 
+""" " Use tab for trigger completion with characters ahead and navigate.
+""" " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
+""" inoremap <silent><expr> <TAB>
+"""       \ pumvisible() ? "\<C-n>" :
+"""       \ <SID>check_back_space() ? "\<TAB>" :
+"""       \ coc#refresh()
+""" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
+""" 
+""" function! s:check_back_space() abort
+"""   let col = col('.') - 1
+"""   return !col || getline('.')[col - 1]  =~# '\s'
+""" endfunction
+""" 
+""" " Use <c-space> to trigger completion.
+""" inoremap <silent><expr> <c-space> coc#refresh()
+""" 
+""" " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
+""" " Coc only does snippet and additional edit on confirm.
+""" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
+""" " Or use `complete_info` if your vim support it, like:
+""" " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
+""" 
+""" " Use `[g` and `]g` to navigate diagnostics
+""" nmap <silent> [g <Plug>(coc-diagnostic-prev)
+""" nmap <silent> ]g <Plug>(coc-diagnostic-next)
+""" 
+""" " Remap keys for gotos
+""" nmap <silent> gd <Plug>(coc-definition)
+""" nmap <silent> gy <Plug>(coc-type-definition)
+""" nmap <silent> gi <Plug>(coc-implementation)
+""" nmap <silent> gr <Plug>(coc-references)
+""" 
+""" " Use K to show documentation in preview window
+""" nnoremap <silent> K :call <SID>show_documentation()<CR>
+""" 
+""" function! s:show_documentation()
+"""   if (index(['vim','help'], &filetype) >= 0)
+"""     execute 'h '.expand('<cword>')
+"""   else
+"""     call CocAction('doHover')
+"""   endif
+""" endfunction
+""" 
+""" " Highlight symbol under cursor on CursorHold
+""" " autocmd CursorHold * silent call CocActionAsync('highlight')
+""" 
+""" 
+""" " Remap for rename current word
+""" nmap <leader>rn <Plug>(coc-rename)
+""" 
+""" " Remap for rename current word
+""" xmap <leader>rf <Plug>(coc-refactor)
+""" nmap <leader>rf <Plug>(coc-refactor)
+""" 
+""" " " Remap for format selected region
+""" " xmap <leader>f  <Plug>(coc-format-selected)
+""" " nmap <leader>f  <Plug>(coc-format-selected)
+""" 
+""" augroup mygroup
+"""   autocmd!
+"""   " Setup formatexpr specified filetype(s).
+"""   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
+"""   " Update signature help on jump placeholder
+"""   " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
+""" augroup end
+""" 
+""" " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
+""" xmap <leader>a  <Plug>(coc-codeaction-selected)
+""" nmap <leader>a  <Plug>(coc-codeaction-selected)
+""" 
+""" " Remap for do codeAction of current line
+""" nmap <leader>ac  <Plug>(coc-codeaction)
+""" " Fix autofix problem of current line
+""" nmap <leader>qf  <Plug>(coc-fix-current)
+""" 
+""" " Create mappings for function text object, requires document symbols feature of languageserver.
+""" xmap if <Plug>(coc-funcobj-i)
+""" xmap af <Plug>(coc-funcobj-a)
+""" omap if <Plug>(coc-funcobj-i)
+""" omap af <Plug>(coc-funcobj-a)
+""" 
+""" " Use <TAB> for select selections ranges, needs server support, like: coc-tsserver, coc-python
+""" nmap <silent> <TAB> <Plug>(coc-range-select)
+""" xmap <silent> <TAB> <Plug>(coc-range-select)
+""" 
+""" " Use `:Format` to format current buffer
+""" command! -nargs=0 Format :call CocAction('format')
+""" 
+""" " Use `:Fold` to fold current buffer
+""" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
+""" 
+""" " use `:OR` for organize import of current buffer
+""" command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
+""" 
+""" " Add status line support, for integration with other plugin, checkout `:h coc-status`
+""" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
+""" 
+""" " Using CocList
+""" " Show all diagnostics
+""" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
+""" " Manage extensions
+""" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
+""" " Show commands
+""" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
+""" " Find symbol of current document
+""" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
+""" " Search workspace symbols
+""" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
+""" " Do default action for next item.
+""" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
+""" " Do default action for previous item.
+""" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
+""" " Resume latest coc list
+""" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
+""" 
+""" " ===========================
+""" " coc.vim plugin settings
+""" " ===========================
 
 
 " Map w!! to write readonly files

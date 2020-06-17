@@ -12,9 +12,6 @@ filetype plugin indent on " load the plugin and indent settings for the detected
 " set rtp+=~/.vim/bundle/Vundle.vim
 " call vundle#begin()
 
-set undodir=~/.vim/undodir
-set undofile "Maintain undo history between sessions
-
 " let Vundle manage Vundle
 " required! 
 " Plugin 'gmarik/Vundle.vim'
@@ -613,6 +610,11 @@ endif
 """ " ===========================
 """ " coc.vim plugin settings
 """ " ===========================
+
+set undodir=~/.vim/undo
+set undofile "Maintain undo history between sessions
+set undolevels=1000
+set undoreload=10000
 
 
 " Map w!! to write readonly files

@@ -28,14 +28,14 @@ if exists('*minpac#init')
   call minpac#add('elixir-lang/vim-elixir') " Elixir
   call minpac#add('ElmCast/elm-vim') " Elm
   call minpac#add('guns/vim-clojure-static') " Clojure
-  call minpac#add('jgdavey/tslime.vim') " Send to Tmux
+  call minpac#add('jgdavey/tslime.vim', {'branch': 'main'}) " Send to Tmux
+  call minpac#add('hashivim/vim-terraform') " Terraform
+  call minpac#add('kovisoft/paredit')
   call minpac#add('leafgarland/typescript-vim') " TypeScript
   call minpac#add('luochen1990/rainbow')
-"  call minpac#add('hyhugh/coc-erlang_ls', {'do': 'yarn install --frozen-lockfile'})
   call minpac#add('idris-hackers/idris-vim') " Idris
+  call minpac#add('mattn/vim-lsp-settings') " Generic LSP Server install and settings for all languages
   call minpac#add('mxw/vim-jsx') " React JSX support
-"  call minpac#add('neoclide/coc.nvim', {'branch': 'release'})
-"  call minpac#add('neoclide/coc-solargraph') " Ruby
   call minpac#add('neomake/neomake') " Linting/Make
   call minpac#add('nvie/vim-flake8') " Python
   call minpac#add('pangloss/vim-javascript') " JavaScript
@@ -43,9 +43,6 @@ if exists('*minpac#init')
   call minpac#add('prabirshrestha/vim-lsp') " Language Server Protocol
   call minpac#add('raichoo/purescript-vim') " PureScript
   call minpac#add('reasonml-editor/vim-reason') " ReasonML
-  call minpac#add('ryanolsonx/vim-lsp-javascript') " JavaScript
-  call minpac#add('ryanolsonx/vim-lsp-python') " Python
-  call minpac#add('ryanolsonx/vim-lsp-typescript') " TypeScript
   call minpac#add('skywind3000/asyncrun.vim') " :AsyncRun
   call minpac#add('thoughtbot/vim-rspec')
   call minpac#add('tpope/vim-classpath')
@@ -65,6 +62,7 @@ if exists('*minpac#init')
   call minpac#add('vim-syntastic/syntastic')
   call minpac#add('w0rp/ale') " Linting
   call minpac#add('vim-jp/syntax-vim-ex')
+  call minpac#add('tsandall/vim-rego') " Rego
 endif
 
 " Define user commands for updating/cleaning the plugins.
@@ -124,6 +122,11 @@ set signcolumn=yes
 set cmdheight=2                    " Better display for messages
 set shortmess+=c                   " don't give |ins-completion-menu| messages.
 
+set undodir=~/.vim/undo
+set undofile "Maintain undo history between sessions
+set undolevels=1000
+set undoreload=10000
+
 
 nnoremap <C-e> 3<C-e>
 nnoremap <C-y> 3<C-y>
@@ -134,7 +137,7 @@ set tabstop=2
 set shiftwidth=2
 set softtabstop=2
 set expandtab
-set list listchars=tab:\ \ ,trail:·
+set list listchars=tab:➥\ ,trail:·
 
 " Searching
 set hlsearch
@@ -145,6 +148,10 @@ set smartcase
 " Tab completion
 set wildmode=list:longest,list:full
 set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
+
+" Insert Date
+:nnoremap <F5> "=strftime("%F")<CR>p
+:inoremap <F5> <C-R>=strftime("%F")<CR>
 
 " Local Leader
 "let maplocalleader = "\\"
@@ -165,6 +172,10 @@ let g:CommandTMaxHeight=20
 
 " ZoomWin configuration
 map <Leader><Leader> :ZoomWin<CR>
+
+" nnoremap <leader>v :set paste<CR>imap <C-V> <C-O>:set paste<CR><C-R><C-R>+<C-O>:set nopaste<CR><esc>:set nopaste
+imap <C-V> <C-O>:set paste<CR><C-R><C-R>+<C-O>:set nopaste<CR>
+
 
 " CTags
 " command! MakeTags !ctags --exclude="@.ctagsignore" --extras=+f -R `pwd`
@@ -272,9 +283,11 @@ map <Leader>vl :VimuxRunLastCommand<CR>
 map <Leader>vi :VimuxInspectRunner<CR>
 
 "Marked App
-if executable('Marked.app')
-  nnoremap <leader>m :AsyncRun -mode=bang open -a Marked.app "$(VIM_FILENAME)" <cr>
-endif
+" if executable('Marked.app')
+  " nnoremap <leader>m :AsyncRun -mode=bang open -a Marked.app "$(VIM_FILENAME)" <cr>
+  nnoremap <leader>m :AsyncRun -mode=bang open -a Marked\ 2.app '%:p'<cr>
+  " nnoremap <leader>m :silent !open -a Marked.app '%:p'<cr>
+"endif
 
 " tmux setup with tslime for vim
 let g:tslime_always_current_session = 1
@@ -334,6 +347,22 @@ nmap <leader>rn :LspRename<cr>
 " End Language Server Protocol settings
 " ======================================
 
+" ===========================
+" Bash settings
+" ===========================
+
+if executable('bash-language-server')
+  au User lsp_setup call lsp#register_server({
+        \ 'name': 'bash-language-server',
+        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'bash-language-server start']},
+        \ 'whitelist': ['sh'],
+        \ })
+endif
+
+" ===========================
+" End Bash settings
+" ===========================
+
 
 " ===========================
 " Elm settings
@@ -392,14 +421,14 @@ let g:jsx_ext_required = 1
 " Turn off jslint errors by default
 let g:JSLintHighlightErrorLine = 0
 
-if executable('typescript-language-server')
-  au User lsp_setup call lsp#register_server({
-     \ 'name': 'javascript support using typescript-language-server',
-     \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-     \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
-     \ 'whitelist': ['javascript', 'javascript.jsx'],
-     \ })
-endif
+" if executable('typescript-language-server')
+"   au User lsp_setup call lsp#register_server({
+"      \ 'name': 'javascript support using typescript-language-server',
+"      \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+"      \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'package.json'))},
+"      \ 'whitelist': ['javascript', 'javascript.jsx'],
+"      \ })
+" endif
 " ========================
 " End JavaScript settings
 " ========================
@@ -471,151 +500,38 @@ let g:rspec_command = 'call Send_to_Tmux("bundle exec rspec {spec}\n")'
 " ======================
 
 
+" ======================
+" Terraform Settings
+" ======================
+let g:terraform_align=1
+let g:terraform_fmt_on_save=1
+
+if executable('terraform-ls')
+    au User lsp_setup call lsp#register_server({
+        \ 'name': 'terraform-ls',
+        \ 'cmd': {server_info->['terraform-ls', 'serve']},
+        \ 'whitelist': ['terraform'],
+        \ })
+endif
+" ======================
+" Terraform Settings
+" ======================
+
+
 " ========================
 " TypeScript Settings
 " ========================
-if executable('typescript-language-server')
-    au User lsp_setup call lsp#register_server({
-        \ 'name': 'typescript-language-server',
-        \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
-        \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
-        \ 'whitelist': ['typescript', 'typescript.tsx'],
-        \ })
-endif
+" if executable('typescript-language-server')
+"     au User lsp_setup call lsp#register_server({
+"         \ 'name': 'typescript-language-server',
+"         \ 'cmd': {server_info->[&shell, &shellcmdflag, 'typescript-language-server --stdio']},
+"         \ 'root_uri':{server_info->lsp#utils#path_to_uri(lsp#utils#find_nearest_parent_file_directory(lsp#utils#get_buffer_path(), 'tsconfig.json'))},
+"         \ 'whitelist': ['typescript', 'typescript.tsx'],
+"         \ })
+" endif
 " ========================
 " End TypeScript Settings
 " ========================
-
-
-
-""" " ===========================
-""" " coc.vim plugin settings
-""" " ===========================
-""" 
-""" " Use tab for trigger completion with characters ahead and navigate.
-""" " Use command ':verbose imap <tab>' to make sure tab is not mapped by other plugin.
-""" inoremap <silent><expr> <TAB>
-"""       \ pumvisible() ? "\<C-n>" :
-"""       \ <SID>check_back_space() ? "\<TAB>" :
-"""       \ coc#refresh()
-""" inoremap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<C-h>"
-""" 
-""" function! s:check_back_space() abort
-"""   let col = col('.') - 1
-"""   return !col || getline('.')[col - 1]  =~# '\s'
-""" endfunction
-""" 
-""" " Use <c-space> to trigger completion.
-""" inoremap <silent><expr> <c-space> coc#refresh()
-""" 
-""" " Use <cr> to confirm completion, `<C-g>u` means break undo chain at current position.
-""" " Coc only does snippet and additional edit on confirm.
-""" inoremap <expr> <cr> pumvisible() ? "\<C-y>" : "\<C-g>u\<CR>"
-""" " Or use `complete_info` if your vim support it, like:
-""" " inoremap <expr> <cr> complete_info()["selected"] != "-1" ? "\<C-y>" : "\<C-g>u\<CR>"
-""" 
-""" " Use `[g` and `]g` to navigate diagnostics
-""" nmap <silent> [g <Plug>(coc-diagnostic-prev)
-""" nmap <silent> ]g <Plug>(coc-diagnostic-next)
-""" 
-""" " Remap keys for gotos
-""" nmap <silent> gd <Plug>(coc-definition)
-""" nmap <silent> gy <Plug>(coc-type-definition)
-""" nmap <silent> gi <Plug>(coc-implementation)
-""" nmap <silent> gr <Plug>(coc-references)
-""" 
-""" " Use K to show documentation in preview window
-""" nnoremap <silent> K :call <SID>show_documentation()<CR>
-""" 
-""" function! s:show_documentation()
-"""   if (index(['vim','help'], &filetype) >= 0)
-"""     execute 'h '.expand('<cword>')
-"""   else
-"""     call CocAction('doHover')
-"""   endif
-""" endfunction
-""" 
-""" " Highlight symbol under cursor on CursorHold
-""" " autocmd CursorHold * silent call CocActionAsync('highlight')
-""" 
-""" 
-""" " Remap for rename current word
-""" nmap <leader>rn <Plug>(coc-rename)
-""" 
-""" " Remap for rename current word
-""" xmap <leader>rf <Plug>(coc-refactor)
-""" nmap <leader>rf <Plug>(coc-refactor)
-""" 
-""" " " Remap for format selected region
-""" " xmap <leader>f  <Plug>(coc-format-selected)
-""" " nmap <leader>f  <Plug>(coc-format-selected)
-""" 
-""" augroup mygroup
-"""   autocmd!
-"""   " Setup formatexpr specified filetype(s).
-"""   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-"""   " Update signature help on jump placeholder
-"""   " autocmd User CocJumpPlaceholder call CocActionAsync('showSignatureHelp')
-""" augroup end
-""" 
-""" " Remap for do codeAction of selected region, ex: `<leader>aap` for current paragraph
-""" xmap <leader>a  <Plug>(coc-codeaction-selected)
-""" nmap <leader>a  <Plug>(coc-codeaction-selected)
-""" 
-""" " Remap for do codeAction of current line
-""" nmap <leader>ac  <Plug>(coc-codeaction)
-""" " Fix autofix problem of current line
-""" nmap <leader>qf  <Plug>(coc-fix-current)
-""" 
-""" " Create mappings for function text object, requires document symbols feature of languageserver.
-""" xmap if <Plug>(coc-funcobj-i)
-""" xmap af <Plug>(coc-funcobj-a)
-""" omap if <Plug>(coc-funcobj-i)
-""" omap af <Plug>(coc-funcobj-a)
-""" 
-""" " Use <TAB> for select selections ranges, needs server support, like: coc-tsserver, coc-python
-""" nmap <silent> <TAB> <Plug>(coc-range-select)
-""" xmap <silent> <TAB> <Plug>(coc-range-select)
-""" 
-""" " Use `:Format` to format current buffer
-""" command! -nargs=0 Format :call CocAction('format')
-""" 
-""" " Use `:Fold` to fold current buffer
-""" command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-""" 
-""" " use `:OR` for organize import of current buffer
-""" command! -nargs=0 OR   :call     CocAction('runCommand', 'editor.action.organizeImport')
-""" 
-""" " Add status line support, for integration with other plugin, checkout `:h coc-status`
-""" set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
-""" 
-""" " Using CocList
-""" " Show all diagnostics
-""" nnoremap <silent> <space>a  :<C-u>CocList diagnostics<cr>
-""" " Manage extensions
-""" nnoremap <silent> <space>e  :<C-u>CocList extensions<cr>
-""" " Show commands
-""" nnoremap <silent> <space>c  :<C-u>CocList commands<cr>
-""" " Find symbol of current document
-""" nnoremap <silent> <space>o  :<C-u>CocList outline<cr>
-""" " Search workspace symbols
-""" nnoremap <silent> <space>s  :<C-u>CocList -I symbols<cr>
-""" " Do default action for next item.
-""" nnoremap <silent> <space>j  :<C-u>CocNext<CR>
-""" " Do default action for previous item.
-""" nnoremap <silent> <space>k  :<C-u>CocPrev<CR>
-""" " Resume latest coc list
-""" nnoremap <silent> <space>p  :<C-u>CocListResume<CR>
-""" 
-""" " ===========================
-""" " coc.vim plugin settings
-""" " ===========================
-
-set undodir=~/.vim/undo
-set undofile "Maintain undo history between sessions
-set undolevels=1000
-set undoreload=10000
-
 
 " Map w!! to write readonly files
 cmap w!! w !sudo tee % >/dev/null

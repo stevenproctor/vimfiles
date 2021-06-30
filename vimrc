@@ -13,42 +13,56 @@ filetype plugin indent on " load the plugin and indent settings for the detected
 " call vundle#begin()
 
 " let Vundle manage Vundle
-" required! 
+" required!
 " Plugin 'gmarik/Vundle.vim'
 
-if exists('*minpac#init')
+function! PackInit() abort
+  packadd minpac
+
   " minpac is loaded.
   call minpac#init()
   call minpac#add('k-takata/minpac', {'type': 'opt'})
 
   " Additional plugins here.
   call minpac#add('airblade/vim-gitgutter') " Git
-  call minpac#add('altercation/vim-colors-solarized') "Solarized
+  " call minpac#add('altercation/vim-colors-solarized') "Solarized
+  call minpac#add('clojure-vim/vim-jack-in') " Conjure support - jack-in with nrepl dependencies
+  call minpac#add('dense-analysis/ale') " Linting
   call minpac#add('editorconfig/editorconfig-vim')
   call minpac#add('elixir-lang/vim-elixir') " Elixir
   call minpac#add('ElmCast/elm-vim') " Elm
-  call minpac#add('guns/vim-clojure-static') " Clojure
+  " call minpac#add('guns/vim-clojure-static') " Clojure
+  "" call minpac#add('guns/vim-sexp') " Lisps
   call minpac#add('jgdavey/tslime.vim', {'branch': 'main'}) " Send to Tmux
+  call minpac#add('jiangmiao/auto-pairs') " backets, parens, and quotes in pairs
   call minpac#add('hashivim/vim-terraform') " Terraform
   call minpac#add('kovisoft/paredit')
   call minpac#add('leafgarland/typescript-vim') " TypeScript
+  call minpac#add('lifepillar/vim-solarized8') " Solarized
   call minpac#add('luochen1990/rainbow')
   call minpac#add('idris-hackers/idris-vim') " Idris
   call minpac#add('mattn/vim-lsp-settings') " Generic LSP Server install and settings for all languages
   call minpac#add('mxw/vim-jsx') " React JSX support
+  " call minpac#add('ncm2/float-preview.nvim') " autocomplete with preview
   call minpac#add('neomake/neomake') " Linting/Make
   call minpac#add('nvie/vim-flake8') " Python
   call minpac#add('pangloss/vim-javascript') " JavaScript
   call minpac#add('prabirshrestha/async.vim') " Vim/NeoVim async normalization
   call minpac#add('prabirshrestha/vim-lsp') " Language Server Protocol
+  call minpac#add('prabirshrestha/asyncomplete.vim') " Language Server Protocol
+  call minpac#add('prabirshrestha/asyncomplete-lsp.vim') " Language Server Protocol
   call minpac#add('raichoo/purescript-vim') " PureScript
   call minpac#add('reasonml-editor/vim-reason') " ReasonML
+  call minpac#add('rhysd/vim-lsp-ale') " vim-lsp + ALE
   call minpac#add('skywind3000/asyncrun.vim') " :AsyncRun
+  " call minpac#add('Shougo/deoplete.nvim') " async completion
   call minpac#add('thoughtbot/vim-rspec')
   call minpac#add('tpope/vim-classpath')
-  call minpac#add('tpope/vim-fireplace') " Clojure
-  call minpac#add('tpope/vim-fugitive') " Git
+  call minpac#add('tpope/vim-dispatch') " Conjure support - jack-in with nrepl dependencies
+  " call minpac#add('tpope/vim-fireplace') " Clojure
+  " call minpac#add('tpope/vim-fugitive') " Git
   call minpac#add('tpope/vim-pathogen')
+  "" call minpac#add('tpope/vim-sexp-mappings-for-regular-people')
   call minpac#add('tpope/vim-surround')
   call minpac#add('tpope/vim-repeat')
   call minpac#add('tpope/vim-unimpaired')
@@ -60,17 +74,22 @@ if exists('*minpac#init')
   call minpac#add('vim-erlang/vim-erlang-skeletons') " Erlang
   call minpac#add('vim-ruby/vim-ruby') " Ruby
   call minpac#add('vim-syntastic/syntastic')
-  call minpac#add('w0rp/ale') " Linting
   call minpac#add('vim-jp/syntax-vim-ex')
   call minpac#add('tsandall/vim-rego') " Rego
-endif
+
+  " NeoVim only plugins
+  if has('nvim')
+    call minpac#add('Olical/conjure') " Clojure
+    call minpac#add('radenling/vim-dispatch-neovim') " Clojure
+  endif
+endfunction
 
 " Define user commands for updating/cleaning the plugins.
 " Each of them loads minpac, reloads .vimrc to register the
 " information of plugins, then performs the task.
-command! PackUpdate packadd minpac | source ~/.vimrc | call minpac#update('', {'do': 'call minpac#status()'})
-command! PackClean  packadd minpac | source ~/.vimrc | call minpac#clean()
-command! PackStatus packadd minpac | source ~/.vimrc | call minpac#status()
+command! PackUpdate call PackInit() | call minpac#update('', {'do': 'call minpac#status()'})
+command! PackClean  call PackInit() | call minpac#clean()
+command! PackStatus packadd minpac | call minpac#status()
 
 " My bundles here:
 "
@@ -111,7 +130,7 @@ set showcmd                        " display incomplete commands
 set backupdir=$HOME/.vim/backup
 set directory=$HOME/.vim/backup    " Don't clutter my dirs up with swp and tmp files
 set autoread
-set noesckeys                      " Get rid of the delay when hitting esc! "
+" set noesckeys                      " Get rid of the delay when hitting esc! "
 set shiftround                     " When at 3 spaces and I hit >>, go to 4, not 5.
 set nofoldenable                   " Say no to code folding...  "
 set grepprg=ag                     " Use Silver Searcher instead of grep
@@ -121,6 +140,9 @@ set updatetime=300                 " per coc.vim for diagnostic messages
 set signcolumn=yes
 set cmdheight=2                    " Better display for messages
 set shortmess+=c                   " don't give |ins-completion-menu| messages.
+set splitbelow                     " open horizontal splits at the bottom
+set splitright                     " open vertical splits to the right
+set termguicolors                  " support true color
 
 set undodir=~/.vim/undo
 set undofile "Maintain undo history between sessions
@@ -165,13 +187,13 @@ set wildignore+=*.o,*.obj,.git,*.rbc,*.class,.svn,vendor/gems/*
 " Without setting this, ZoomWin restores windows in a way that causes
 " equalalways behavior to be triggered the next time CommandT is used.
 " This is likely a bludgeon to solve some other issue, but it works
-set noequalalways
+" set noequalalways
 
 " Command-T configuration
-let g:CommandTMaxHeight=20
+" let g:CommandTMaxHeight=20
 
 " ZoomWin configuration
-map <Leader><Leader> :ZoomWin<CR>
+" map <Leader><Leader> :ZoomWin<CR>
 
 " nnoremap <leader>v :set paste<CR>imap <C-V> <C-O>:set paste<CR><C-R><C-R>+<C-O>:set nopaste<CR><esc>:set nopaste
 imap <C-V> <C-O>:set paste<CR><C-R><C-R>+<C-O>:set nopaste<CR>
@@ -206,56 +228,57 @@ nmap <C-Down> ]e
 vmap <C-Up> [egv
 vmap <C-Down> ]egv
 
-" gist-vim defaults
-if has("mac")
-  let g:gist_clip_command = 'pbcopy'
-elseif has("unix")
-  let g:gist_clip_command = 'xclip -selection clipboard'
-endif
-let g:gist_detect_filetype = 1
-let g:gist_open_browser_after_post = 1
+set redrawtime=10000
+""  gist-vim defaults
+"" if has("mac")
+""   let g:gist_clip_command = 'pbcopy'
+"" elseif has("unix")
+""   let g:gist_clip_command = 'xclip -selection clipboard'
+"" endif
+"" let g:gist_detect_filetype = 1
+"" let g:gist_open_browser_after_post = 1
 
 " Use modeline overrides
-set modeline
-set modelines=10
+"" "set modeline
+"" "set modelines=10
 
 
 " Default color scheme
 " let g:solarized_termtrans = 1
 " let g:solarized_termcolors=256
 " let g:solarized_termcolors= 16 | 256
-colorscheme solarized
+colorscheme solarized8
 
 " MacVIM shift+arrow-keys behavior (required in .vimrc)
 let macvim_hig_shift_movement = 1
 
 " % to bounce from do to end etc.
-runtime! macros/matchit.vim
+"" runtime! macros/matchit.vim
 
 " Settings for VimClojure
 "let g:clj_hightlight_builtins=1 " Highlight Clojure's builtins
 "let vimclojure#ParenRainbow=1       " Rainbow parentheses'!
 "let vimclojure#WantNailgun = 1
 
-let g:rbpt_max = 15
-let g:rbpt_loadcmd_toggle = 0
-let g:rbpt_colorpairs = [
-    \ ['white',       'DarkOrchid3'],
-    \ ['gray',        'SeaGreen3'],
-    \ ['yellow',      'firebrick3'],
-    \ ['blue',        'RoyalBlue3'],
-    \ ['green',       'DarkOrchid3'],
-    \ ['cyan',        'SeaGreen3'],
-    \ ['magenta',     'RoyalBlue3'],
-    \ ['red',         'DarkOrchid3'],
-    \ ['brown',       'RoyalBlue3'],
-    \ ['darkgray',    'DarkOrchid3'],
-    \ ['darkblue',    'firebrick3'],
-    \ ['darkgreen',   'RoyalBlue3'],
-    \ ['darkcyan',    'SeaGreen3'],
-    \ ['darkmagenta', 'DarkOrchid3'],
-    \ ['darkred',     'firebrick3'],
-    \ ]
+"" let g:rbpt_max = 16
+"" let g:rbpt_loadcmd_toggle = 0
+"" let g:rbpt_colorpairs = [
+""     \ ['white',       'DarkOrchid3'],
+""     \ ['gray',        'SeaGreen3'],
+""     \ ['yellow',      'firebrick3'],
+""     \ ['blue',        'RoyalBlue3'],
+""     \ ['green',       'DarkOrchid3'],
+""     \ ['cyan',        'SeaGreen3'],
+""     \ ['magenta',     'RoyalBlue3'],
+""     \ ['red',         'DarkOrchid3'],
+""     \ ['brown',       'RoyalBlue3'],
+""     \ ['darkgray',    'DarkOrchid3'],
+""     \ ['darkblue',    'firebrick3'],
+""     \ ['darkgreen',   'RoyalBlue3'],
+""     \ ['darkcyan',    'SeaGreen3'],
+""     \ ['darkmagenta', 'DarkOrchid3'],
+""     \ ['darkred',     'firebrick3'],
+""     \ ]
 
 let g:rainbow_active = 1
 "au Syntax * RainbowParenthesesLoadRound
@@ -310,10 +333,20 @@ let g:ale_sign_column_always = 1
 
 let g:ale_lint_on_filetype_changed = 1    " default
 let g:ale_lint_on_text_changed = 'always' " default
+let g:ale_lint_on_insert_leave = 1        " default
 let g:ale_lint_on_save = 1                " default
 let g:ale_lint_on_enter = 1               " default
 " Set this setting in vimrc if you want to fix files automatically on save.
 let g:ale_fix_on_save = 1
+
+" Lint configuration - clj-kondo
+" clj-kondo should be installed on operating system path
+let g:ale_linters = {
+      \ 'clojure': ['vim-lsp']
+      \}
+let g:ale_fixers = {
+      \ '*': ['remove_trailing_lines', 'trim_whitespace'],
+      \}
 " ===========================
 " End ALE Linting settings
 " ===========================
@@ -329,23 +362,73 @@ let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_warning = {'text': '‼'} " icons require GUI
 let g:lsp_signs_hint = {'text': '🔎'} " icons require GUI
 
-augroup format_on_write_group
-  autocmd!
-  "autocmd BufWrite <buffer> LspDocumentFormatSync
+function! s:on_lsp_buffer_enabled() abort
+    setlocal omnifunc=lsp#complete
+    setlocal signcolumn=yes
+    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+    nmap <buffer> gd <plug>(lsp-definition)
+    nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    nmap <buffer> gr <plug>(lsp-references)
+    nmap <buffer> gi <plug>(lsp-implementation)
+    nmap <buffer> gt <plug>(lsp-type-definition)
+    nmap <buffer> <leader>rn <plug>(lsp-rename)
+    nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+    nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+    nmap <buffer> K <plug>(lsp-hover)
+    inoremap <buffer> <expr><c-f> lsp#scroll(+4)
+    inoremap <buffer> <expr><c-d> lsp#scroll(-4)
+
+    " Remap for format selected region
+    xmap <leader>f  :LspDocumentRangeFormat<cr>
+    nmap <leader>f  :LspDocumentRangeFormat<cr>
+
+    xmap <leader>fa  :LspDocumentFormat<cr>
+    nmap <leader>fa  :LspDocumentFormat<cr>
+
+    xmap <leader>id  :LspCodeAction refactor.inline<cr>
+    nmap <leader>id  :LspCodeAction refactor.inline<cr>
+
+    let g:lsp_format_sync_timeout = 1000
+    autocmd! BufWritePre <buffer>
+          \ call execute('LspDocumentFormatSync')
+    autocmd BufWritePre <buffer>
+                \ call execute('LspCodeActionSync source.organizeImports')
+    " refer to doc to add more commands
+endfunction
+
+augroup lsp_install
+    au!
+    " call s:on_lsp_buffer_enabled only for languages that has the server registered.
+    autocmd User lsp_buffer_enabled call s:on_lsp_buffer_enabled()
 augroup END
 
-" Remap for format selected region
-xmap <leader>f  :LspDocumentRangeFormat<cr>
-nmap <leader>f  :LspDocumentRangeFormat<cr>
-
-xmap <leader>fa  :LspDocumentFormat<cr>
-nmap <leader>fa  :LspDocumentFormat<cr>
-
-nmap <leader>rn :LspRename<cr>
 
 " ======================================
 " End Language Server Protocol settings
 " ======================================
+
+" ===========================
+" Paredit settings
+" ===========================
+let g:paredit_smartjump = 1
+let g:paredit_leader = '\'
+function! PareditMapKeysCustom()
+  call PareditMapKeys()
+  call RepeatableNNoRemap(g:paredit_leader . '(', ':<C-U>call PareditMoveLeft()')
+  call RepeatableNNoRemap(g:paredit_leader . ')', ':<C-U>call PareditMoveRight()')
+endfunction
+let g:paredit_map_func = 'PareditMapKeysCustom'
+
+" if exists( 'g:paredit_loaded' )
+"   call RepeatableNNoRemap(g:paredit_leader . '(', ':<C-U>call PareditMoveLeft()')
+"   call RepeatableNNoRemap(g:paredit_leader . ')', ':<C-U>call PareditMoveRight()')
+" end
+
+" ======================================
+" End Paredit settings
+" ======================================
+
 
 " ===========================
 " Bash settings
@@ -463,6 +546,19 @@ au FileType make set noexpandtab
 
 
 " ========================
+" Clojure settings
+" ========================
+if has('nvim')
+  let g:conjure#client#clojure#nrepl#eval#print_buffer_size = 1024
+
+  nnoremap <leader>cssd :ConjureShadowSelect dev<cr>
+endif
+" ========================
+" End Python Settings
+" ========================
+
+
+" ========================
 " Python Settings
 " ========================
 " make Python follow PEP8 ( http://www.python.org/dev/peps/pep-0008/ )
@@ -537,4 +633,3 @@ endif
 cmap w!! w !sudo tee % >/dev/null
 
 au! BufWritePost .vimrc source %
-

@@ -41,26 +41,22 @@ function! PackInit() abort
   call minpac#add('lifepillar/vim-solarized8') " Solarized
   call minpac#add('luochen1990/rainbow')
   call minpac#add('idris-hackers/idris-vim') " Idris
-  call minpac#add('mattn/vim-lsp-settings') " Generic LSP Server install and settings for all languages
   call minpac#add('mxw/vim-jsx') " React JSX support
   " call minpac#add('ncm2/float-preview.nvim') " autocomplete with preview
   call minpac#add('neomake/neomake') " Linting/Make
   call minpac#add('nvie/vim-flake8') " Python
   call minpac#add('pangloss/vim-javascript') " JavaScript
   call minpac#add('prabirshrestha/async.vim') " Vim/NeoVim async normalization
-  call minpac#add('prabirshrestha/vim-lsp') " Language Server Protocol
   call minpac#add('prabirshrestha/asyncomplete.vim') " Language Server Protocol
-  call minpac#add('prabirshrestha/asyncomplete-lsp.vim') " Language Server Protocol
   call minpac#add('raichoo/purescript-vim') " PureScript
   call minpac#add('reasonml-editor/vim-reason') " ReasonML
-  call minpac#add('rhysd/vim-lsp-ale') " vim-lsp + ALE
   call minpac#add('skywind3000/asyncrun.vim') " :AsyncRun
   " call minpac#add('Shougo/deoplete.nvim') " async completion
   call minpac#add('thoughtbot/vim-rspec')
   call minpac#add('tpope/vim-classpath')
   call minpac#add('tpope/vim-dispatch') " Conjure support - jack-in with nrepl dependencies
   " call minpac#add('tpope/vim-fireplace') " Clojure
-  " call minpac#add('tpope/vim-fugitive') " Git
+  call minpac#add('tpope/vim-fugitive') " Git
   call minpac#add('tpope/vim-pathogen')
   "" call minpac#add('tpope/vim-sexp-mappings-for-regular-people')
   call minpac#add('tpope/vim-surround')
@@ -77,10 +73,21 @@ function! PackInit() abort
   call minpac#add('vim-jp/syntax-vim-ex')
   call minpac#add('tsandall/vim-rego') " Rego
 
+  call minpac#add('prabirshrestha/vim-lsp') " Language Server Protocol
+  call minpac#add('rhysd/vim-lsp-ale') " vim-lsp + ALE
+
   " NeoVim only plugins
   if has('nvim')
     call minpac#add('Olical/conjure') " Clojure
     call minpac#add('radenling/vim-dispatch-neovim') " Clojure
+
+    call minpac#add('neovim/nvim-lspconfig') " NeoVim lsp config
+    call minpac#add('kabouzeid/nvim-lspinstall') " NeoVim lsp server installs
+  else
+    call minpac#add('mattn/vim-lsp-settings') " Generic LSP Server install and settings for all languages
+    call minpac#add('prabirshrestha/asyncomplete-lsp.vim') " Language Server Protocol
+    call minpac#add('prabirshrestha/vim-lsp') " Language Server Protocol
+    call minpac#add('rhysd/vim-lsp-ale') " vim-lsp + ALE
   endif
 endfunction
 
@@ -317,10 +324,10 @@ let g:tslime_always_current_session = 1
 let g:tslime_always_current_window = 1
 
 map <leader>` :source ~/.vimrc<CR>
-map <Leader>t :call RunCurrentSpecFile()<CR>
-map <Leader>s :call RunNearestSpec()<CR>
-map <Leader>l :call RunLastSpec()<CR>
-map <Leader>a :call RunAllSpecs()<CR>
+map <Leader>ts :call RunCurrentSpecFile()<CR>
+map <Leader>ss :call RunNearestSpec()<CR>
+map <Leader>ls :call RunLastSpec()<CR>
+map <Leader>as :call RunAllSpecs()<CR>
 
 vmap <Leader>l xi[<c-r>"]()<esc>
 
@@ -329,7 +336,7 @@ vmap <Leader>l xi[<c-r>"]()<esc>
 " ===========================
 let g:ale_sign_error = '>>'
 let g:ale_sign_warning = '--'
-let g:ale_sign_column_always = 1
+let g:ale_sign_column_always = 0
 
 let g:ale_lint_on_filetype_changed = 1    " default
 let g:ale_lint_on_text_changed = 'always' " default
@@ -352,42 +359,42 @@ let g:ale_fixers = {
 " ===========================
 
 " ======================================
-" Language Server Protocol settings
+" vim-lsp Language Server Protocol settings
 " ======================================
-let g:lsp_signs_enabled = 1         " enable signs
-let g:lsp_diagnostics_echo_cursor = 1 " enable echo under cursor when in normal mode
-let g:lsp_highlight_references_enabled = 1
+let g:lsp_signs_enabled = 0         " enable signs
+let g:lsp_diagnostics_echo_cursor = 0 " enable echo under cursor when in normal mode
+let g:lsp_highlight_references_enabled = 0
 
 let g:lsp_signs_error = {'text': '✗'}
 let g:lsp_signs_warning = {'text': '‼'} " icons require GUI
 let g:lsp_signs_hint = {'text': '🔎'} " icons require GUI
 
 function! s:on_lsp_buffer_enabled() abort
-    setlocal omnifunc=lsp#complete
-    setlocal signcolumn=yes
-    if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
-    nmap <buffer> gd <plug>(lsp-definition)
-    nmap <buffer> gs <plug>(lsp-document-symbol-search)
-    nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
-    nmap <buffer> gr <plug>(lsp-references)
-    nmap <buffer> gi <plug>(lsp-implementation)
-    nmap <buffer> gt <plug>(lsp-type-definition)
-    nmap <buffer> <leader>rn <plug>(lsp-rename)
-    nmap <buffer> [g <plug>(lsp-previous-diagnostic)
-    nmap <buffer> ]g <plug>(lsp-next-diagnostic)
-    nmap <buffer> K <plug>(lsp-hover)
-    inoremap <buffer> <expr><c-f> lsp#scroll(+4)
-    inoremap <buffer> <expr><c-d> lsp#scroll(-4)
+    " setlocal omnifunc=lsp#complete
+    " setlocal signcolumn=yes
+    " if exists('+tagfunc') | setlocal tagfunc=lsp#tagfunc | endif
+    " nmap <buffer> gd <plug>(lsp-definition)
+    " nmap <buffer> gs <plug>(lsp-document-symbol-search)
+    " nmap <buffer> gS <plug>(lsp-workspace-symbol-search)
+    " nmap <buffer> gr <plug>(lsp-references)
+    " nmap <buffer> gi <plug>(lsp-implementation)
+    " nmap <buffer> gt <plug>(lsp-type-definition)
+    " nmap <buffer> <leader>rn <plug>(lsp-rename)
+    " nmap <buffer> [g <plug>(lsp-previous-diagnostic)
+    " nmap <buffer> ]g <plug>(lsp-next-diagnostic)
+    " nmap <buffer> K <plug>(lsp-hover)
+    " inoremap <buffer> <expr><c-f> lsp#scroll(+4)
+    " inoremap <buffer> <expr><c-d> lsp#scroll(-4)
 
     " Remap for format selected region
-    xmap <leader>f  :LspDocumentRangeFormat<cr>
-    nmap <leader>f  :LspDocumentRangeFormat<cr>
+    " xmap <leader>f  :LspDocumentRangeFormat<cr>
+    " nmap <leader>f  :LspDocumentRangeFormat<cr>
 
-    xmap <leader>fa  :LspDocumentFormat<cr>
-    nmap <leader>fa  :LspDocumentFormat<cr>
+    xmap <leader>fd  :LspDocumentFormat<cr>
+    nmap <leader>fd  :LspDocumentFormat<cr>
 
-    xmap <leader>id  :LspCodeAction refactor.inline<cr>
-    nmap <leader>id  :LspCodeAction refactor.inline<cr>
+    " xmap <leader>id  :LspCodeAction refactor.inline<cr>
+    " nmap <leader>id  :LspCodeAction refactor.inline<cr>
 
     let g:lsp_format_sync_timeout = 1000
     autocmd! BufWritePre <buffer>
